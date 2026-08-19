@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=harbour-ircam
+Name=IrCam
+Comment=Thermal camera viewer (InfiRay P2 Pro)
+Comment[de]=Wärmebildkamera (InfiRay P2 Pro)
+Exec=harbour-ircam
+
+# Sailjail: the camera is an ordinary V4L2 node (/dev/videoN) and the sandbox
+# leaves /dev/video* reachable for the app user, who is in the video group —
+# so no special permission is needed for the picture. Pictures is needed to
+# write the snapshots, Sharing for the share sheet.
+[X-Sailjail]
+Permissions=Location;Pictures;Sharing
+OrganizationName=harbour-ircam
+ApplicationName=IrCam

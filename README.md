@@ -39,23 +39,39 @@ Tested on a Sony Xperia 10 III with an InfiRay P2 Pro.
 ## What it does
 
 - **Live thermal view** in every orientation, with a choice of palettes
-  (Lava/Inferno, Ironbow, Rainbow, White-hot, Black-hot, and Grey with red
-  peaks). Pinch to zoom, drag to pan, double-tap to cycle zoom.
+  (Lava/Inferno, Ironbow, Rainbow, White-hot, Black-hot, and Grey with only the
+  hottest peaks in red). Pinch to zoom, drag to pan, double-tap to cycle zoom.
 - **Temperature measurement** decoded from the camera's own 16-bit data:
   the hottest and coldest spot, an optional centre spot, and up to six
-  tap-to-place measurement points, plus a colour bar scaled to the picture.
-- **Robust auto-scaling** — the palette is stretched across the scene's
-  temperature range but never across less than a few degrees, so a nearly
-  uniform scene stays soft instead of blowing up into a hard white blob.
-- **Overlays** you can toggle from the viewfinder: a min/max readout on the
-  picture and an optional location line (GPS coordinates in decimal, nautical
-  or navigation format) — both drawn on the live picture and burnt into
-  snapshots.
-- **Snapshots** saved as JPEG in `~/Pictures/IrCam`, with the overlays burnt in
-  at three times the sensor resolution. Optionally the raw per-pixel temperature
-  grid is written next to each picture as CSV.
-- **Gallery** — swipe the centre of a picture to step through captures; rename,
-  delete and share from the pulley.
+  tap-to-place measurement points, each with its reading, plus a colour bar
+  scaled to the picture.
+- **Automatic temperature scaling** that follows the scene but never stretches
+  the palette across less than a few degrees, so a nearly uniform scene stays
+  soft instead of blowing up into a hard white blob.
+- **Sharpening** in three steps — Off, Normal, Superfine — to bring out fine
+  detail in the low-resolution sensor picture.
+- **Calibration offset** — nudge every reading up or down to match a known
+  reference, plus a Celsius/Fahrenheit switch throughout.
+- **Overlays** you toggle from the viewfinder and that are burnt identically
+  into both snapshots and videos: the min/max readout, the centre spot, the
+  colour bar, a date-and-time stamp, and a location line with GPS coordinates in
+  decimal, nautical or navigation format.
+- **Snapshots** saved as JPEG in `~/Pictures/IrCam`, overlays burnt in at three
+  times the sensor resolution. Optionally the raw per-pixel temperature grid is
+  written next to each picture as CSV.
+- **Video recording** of the composed view — all overlays, including the live
+  coordinates, burnt in — as compressed VP8/WebM, with a compression slider in
+  the settings.
+- **Facing out or facing you** — a user-facing camera turns the wrong way in
+  landscape, so switch on “Camera points at me” when you turn it around. The
+  plug/lens direction cannot be detected automatically, so it is a manual switch.
+- **Gallery** — swipe the centre of a picture to step through captures, play
+  back videos, rename, delete and share from the pulley.
+- **Camera database with auto-detection** — known cameras are recognised by
+  their USB id and stream format; an unknown UVC camera is probed and shown
+  image-only. See the supported-camera table and your camera's own measured
+  values on the camera page, save a detected camera, and export a data point to
+  help add support for more models.
 
 ## Supported hardware
 

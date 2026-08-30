@@ -1,7 +1,7 @@
 # Neutral packaging metadata — no personal identifiers.
 Name:       harbour-ircam
 Summary:    Thermal camera viewer for the InfiRay P2 Pro
-Version:    0.1.0
+Version:    0.1.1
 Release:    1
 # ANONYMITY: neutral build host so built RPMs carry no real hostname/domain.
 %define _buildhost reproducible-builder
@@ -54,6 +54,13 @@ telemetry.
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sun Aug 30 2026 harbour-ircam contributors 0.1.1-1
+- The controls keep clear of the camera cutout. On a phone with a notch
+  the top row of buttons and the live status line were cut through by it,
+  so the icons were only half visible; they now start below it. The
+  picture itself still fills the screen. On a phone without a cutout
+  nothing moves.
+
 * Wed Aug 19 2026 harbour-ircam contributors 0.1.0-1
 - First release: live view, palettes, min/max/centre/tap measurements,
   colour bar, snapshots with optional CSV temperature grid, gallery.

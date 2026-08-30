@@ -725,22 +725,22 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
 <context>
     <name>ViewfinderPage</name>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="384"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="401"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="384"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="401"/>
         <source>Photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="470"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="487"/>
         <source>Location</source>
         <translation>Standort</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="307"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="324"/>
         <source>Sharpness</source>
         <translation type="unfinished"></translation>
     </message>

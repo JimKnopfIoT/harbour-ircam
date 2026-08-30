@@ -13,7 +13,8 @@
  * The picture is the app; everything floats over it. Portrait: a row of
  * toggles above a bottom bar (gallery · shutter · settings). Landscape: the
  * toggles in a column on the right above the shutter, gallery and settings
- * on the left — the thumbs' places.
+ * on the left — the thumbs' places. The top row keeps clear of a camera
+ * cutout (`topInset`); the picture underneath does not, on purpose.
  *
  * TAP TO MEASURE
  * With markers on, a tap on the picture adds a measurement point (up to six);
@@ -75,6 +76,20 @@ Page {
     readonly property bool landscape: false
     readonly property real barSize: Theme.itemSizeLarge + 2 * Theme.paddingLarge
 
+    // CAMERA CUTOUT
+    // The picture may run under the notch — it is a picture, and cropping it
+    // would cost more than the corner it hides. The controls may not: on a
+    // phone with a wide cutout (Jolla J2) the top row of round buttons and the
+    // status line were cut through by the notch edge. Silica gives its own
+    // header exactly this margin (`_minimumTopMargin` in PageHeader.qml); this
+    // page draws its own controls over a full-screen picture, so it has to.
+    //
+    // No orientation condition here, unlike Silica: the page is locked to
+    // portrait and only the icons rotate, so the cutout is at the page's top
+    // however the phone is held. On a phone without one the rectangle is empty
+    // and this is zero, so it costs the other devices nothing.
+    readonly property real topInset: Screen.topCutout.height
+
     /* ------------------------------------------------------------------ */
     /* Live picture                                                        */
     /* ------------------------------------------------------------------ */
@@ -110,7 +125,7 @@ Page {
         /* Keep the colour bar and labels clear of the control bars that float
          * over the picture: the top status strip, and the button bar (bottom
          * in portrait, left+right columns in landscape). */
-        safeTop: Theme.paddingLarge + Theme.itemSizeSmall
+        safeTop: page.topInset + Theme.paddingLarge + Theme.itemSizeSmall
         safeBottom: page.barSize
         safeLeft: 0
         safeRight: 0
@@ -263,6 +278,8 @@ Page {
         readonly property real pad: Theme.paddingLarge
         readonly property real sp: Theme.paddingMedium
         readonly property real ssz: Theme.itemSizeSmall
+        // Same margin, plus whatever the camera cutout takes off the top.
+        readonly property real padTop: pad + page.topInset
 
         // fades for legibility
         Rectangle {
@@ -276,7 +293,7 @@ Page {
         }
         Rectangle {
             anchors { left: parent.left; right: parent.right; top: parent.top }
-            height: controls.pad + controls.ssz
+            height: controls.padTop + controls.ssz
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.5) }
                 GradientStop { position: 1.0; color: "transparent" }
@@ -289,7 +306,7 @@ Page {
             rotation: page.controlsRotation
             width: controls.ssz; height: width
             x: controls.pad
-            y: page.landscape ? (page.height - height - controls.pad) : controls.pad
+            y: page.landscape ? (page.height - height - controls.pad) : controls.padTop
             iconSource: "image://theme/icon-m-developer-mode"
             active: true
             onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
@@ -299,7 +316,7 @@ Page {
             rotation: page.controlsRotation
             width: controls.ssz; height: width
             x: page.landscape ? controls.pad : (settingsButton.x + width + controls.sp)
-            y: page.landscape ? (settingsButton.y - height - controls.sp) : controls.pad
+            y: page.landscape ? (settingsButton.y - height - controls.sp) : controls.padTop
             iconSource: Qt.resolvedUrl("../images/icon-sharpen.png")
             active: app.settings.sharpen > 0.6
             onClicked: {
@@ -313,7 +330,7 @@ Page {
             width: controls.ssz; height: width
             // Outermost of the cluster: the colourful thumbnail sits on the edge.
             x: page.landscape ? controls.pad : (modeButton.x + width + controls.sp)
-            y: page.landscape ? (modeButton.y - height - controls.sp) : controls.pad
+            y: page.landscape ? (modeButton.y - height - controls.sp) : controls.padTop
             onClicked: pageStack.push(Qt.resolvedUrl("GalleryPage.qml"))
 
             Rectangle {
@@ -374,7 +391,7 @@ Page {
             width: controls.ssz; height: width
             // Sits between sharpen and the gallery (gallery is the outer one).
             x: page.landscape ? controls.pad : (sharpenButton.x + width + controls.sp)
-            y: page.landscape ? (sharpenButton.y - height - controls.sp) : controls.pad
+            y: page.landscape ? (sharpenButton.y - height - controls.sp) : controls.padTop
             iconSource: Qt.resolvedUrl("../images/icon-photovideo.png")
             active: app.videoMode
             enabled: !app.recorder.recording
@@ -395,7 +412,7 @@ Page {
             spacing: Theme.paddingSmall
             // portrait: right-aligned to the margin; landscape: top-left corner.
             x: page.landscape ? controls.pad : (page.width - controls.pad - width)
-            y: page.landscape ? controls.pad : (controls.pad + (controls.ssz - height) / 2)
+            y: page.landscape ? controls.padTop : (controls.padTop + (controls.ssz - height) / 2)
             Rectangle {
                 width: Theme.paddingSmall; height: width; radius: width / 2
                 anchors.verticalCenter: parent.verticalCenter
@@ -508,7 +525,7 @@ Page {
             visible: app.recorder.recording
             spacing: Theme.paddingSmall
             x: (page.width - width) / 2
-            y: controls.pad + (controls.ssz - height) / 2
+            y: controls.padTop + (controls.ssz - height) / 2
             Rectangle {
                 width: Theme.paddingMedium; height: width; radius: width / 2
                 anchors.verticalCenter: parent.verticalCenter

@@ -104,6 +104,8 @@ The app structure follows the sibling harbour-pipecam. The temperature decode
 (`raw / 64 − 273.15`) is the same formula the open pyThermalCamera project uses
 for this sensor family.
 
+AI assisted development
+
 ## Licence
 
 GNU General Public License v3.0 or later. Provided as is, with no warranty.

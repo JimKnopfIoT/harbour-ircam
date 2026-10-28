@@ -10,7 +10,7 @@ measurement, running entirely on the device — no network access, no telemetry.
 Snapshots carry no location or device data unless I switch the location overlay
 on myself.
 
-Tested on a Sony Xperia 10 III with an InfiRay P2 Pro.
+Tested on a Sony Xperia 10 III and a Jolla Phone (2026) with an InfiRay P2 Pro.
 
 ## Screenshots
 
@@ -82,6 +82,34 @@ temperature value per pixel underneath. Other cameras of the same family that
 deliver the same stream layout (e.g. the Topdon TC001) are likely to work but
 have not been tested.
 
+## "No camera" on the Jolla Phone (2026) since Sailfish OS 5.2.0.22
+
+The hardware adaptation that came with the 5.2.0.22 update (`droid-hal-jp2601`)
+ships a udev rule that gives every `/dev/video*` node the owner `camera`, group
+`system` and mode `0660`. That includes a plugged-in USB camera, so the user
+session can no longer open it and the app keeps asking you to plug the camera
+in, although the kernel has found it. You can confirm this as root while the
+camera is plugged in:
+
+```sh
+ls -l /dev/video*   # the USB camera node shows "camera system"
+```
+
+Until this is changed in the system, a one-line udev rule hands the P2 Pro's
+nodes back to the `video` group. As root (developer mode):
+
+```sh
+cat > /etc/udev/rules.d/999-harbour-ircam.rules <<'EOR'
+SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="5830", GROUP="video", MODE="0660"
+EOR
+udevadm control --reload-rules
+```
+
+Then unplug the camera and plug it in again. The file name must sort after
+`999-android-system.rules`, or that rule wins. Only the thermal camera is
+affected; the phone's own camera nodes stay as they are. To undo, delete the
+file. An app from the store cannot install such a rule itself.
+
 ## A note on accuracy
 
 Temperatures are what the sensor reports, corrected only by an offset you can
@@ -104,8 +132,8 @@ The app structure follows the sibling harbour-pipecam. The temperature decode
 (`raw / 64 − 273.15`) is the same formula the open pyThermalCamera project uses
 for this sensor family.
 
-AI assisted development
-
 ## Licence
 
 GNU General Public License v3.0 or later. Provided as is, with no warranty.
+
+AI assisted development

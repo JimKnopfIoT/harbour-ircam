@@ -136,4 +136,4 @@ for this sensor family.
 
 GNU General Public License v3.0 or later. Provided as is, with no warranty.
 
-AI assisted development
+LLM assisted development

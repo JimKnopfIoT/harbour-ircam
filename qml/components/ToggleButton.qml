@@ -14,6 +14,8 @@ MouseArea {
     id: root
 
     property string iconSource
+    /* Short text in place of the icon (e.g. "600°"). */
+    property string text: ""
     property bool active: true
     /* Optional short caption under the icon (e.g. the palette name). */
     property string caption: ""
@@ -30,7 +32,18 @@ MouseArea {
         border.color: Theme.rgba(Theme.lightPrimaryColor, root.active ? 0.9 : 0.3)
     }
 
+    Label {
+        visible: root.text !== ""
+        anchors.centerIn: parent
+        text: root.text
+        font.pixelSize: Theme.fontSizeExtraSmall
+        font.bold: true
+        color: Theme.lightPrimaryColor
+        opacity: root.active ? 1.0 : 0.7
+    }
+
     Image {
+        visible: root.text === ""
         anchors.centerIn: parent
         source: root.iconSource
         width: Theme.iconSizeSmallPlus

@@ -239,27 +239,45 @@ Page {
         styleColor: Qt.rgba(0, 0, 0, 0.85)
     }
 
+    /* A failed range switch is easy to miss otherwise: the button already shows
+     * the wanted range. */
+    Connections {
+        target: app.camera
+        onRangeChanged: if (app.camera.rangeError !== "") paletteToast.show(app.camera.rangeError, 5000)
+    }
+
     /* Palette name, shown briefly after cycling. */
     Rectangle {
         id: paletteToast
         anchors.centerIn: pinchArea
+        // Upright for the user like the buttons; sideways the line runs along the long edge.
+        rotation: page.controlsRotation
+        readonly property real room: (page.controlsRotation % 180 !== 0 ? pinchArea.height : pinchArea.width)
+                                     - 4 * Theme.paddingLarge
         width: toastLabel.width + 2 * Theme.paddingLarge
         height: toastLabel.height + Theme.paddingMedium
         radius: height / 2
         color: Qt.rgba(0, 0, 0, 0.65)
         opacity: 0
         visible: opacity > 0
-        function show(text) { toastLabel.text = text; toastAnim.restart() }
+        function show(text, ms) {
+            toastLabel.text = text
+            toastPause.duration = ms || 900
+            toastAnim.restart()
+        }
         Label {
             id: toastLabel
             anchors.centerIn: parent
+            width: Math.min(implicitWidth, paletteToast.room)
+            wrapMode: Text.Wrap
+            horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Theme.fontSizeMedium
             color: Theme.lightPrimaryColor
         }
         SequentialAnimation {
             id: toastAnim
             NumberAnimation { target: paletteToast; property: "opacity"; to: 1; duration: 100 }
-            PauseAnimation { duration: 900 }
+            PauseAnimation { id: toastPause; duration: 900 }
             NumberAnimation { target: paletteToast; property: "opacity"; to: 0; duration: 300 }
         }
     }
@@ -329,8 +347,9 @@ Page {
             rotation: page.controlsRotation
             width: controls.ssz; height: width
             // Outermost of the cluster: the colourful thumbnail sits on the edge.
-            x: page.landscape ? controls.pad : (modeButton.x + width + controls.sp)
-            y: page.landscape ? (modeButton.y - height - controls.sp) : controls.padTop
+            readonly property Item before: rangeButton.visible ? rangeButton : modeButton
+            x: page.landscape ? controls.pad : (before.x + width + controls.sp)
+            y: page.landscape ? (before.y - height - controls.sp) : controls.padTop
             onClicked: pageStack.push(Qt.resolvedUrl("GalleryPage.qml"))
 
             Rectangle {
@@ -399,6 +418,23 @@ Page {
             onClicked: {
                 app.videoMode = !app.videoMode
                 paletteToast.show(app.videoMode ? qsTr("Video") : qsTr("Photo"))
+            }
+        }
+
+        // Measuring range, P2 Pro only, between the mode toggle and the gallery. Shows
+        // the upper limit of the range in use; lit while in the 600 °C range.
+        ToggleButton {
+            id: rangeButton
+            visible: app.camera.rangeSwitchable
+            rotation: page.controlsRotation
+            width: controls.ssz; height: width
+            x: page.landscape ? controls.pad : (modeButton.x + width + controls.sp)
+            y: page.landscape ? (modeButton.y - height - controls.sp) : controls.padTop
+            text: app.settings.highRange ? "600°" : "150°"
+            active: app.settings.highRange
+            onClicked: {
+                app.settings.highRange = !app.settings.highRange
+                paletteToast.show(app.rangeName(app.settings.highRange))
             }
         }
 

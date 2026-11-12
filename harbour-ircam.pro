@@ -38,6 +38,7 @@ HEADERS += \
     src/app/capturestore.h \
     src/camera/cameraprofile.h \
     src/camera/palettes.h \
+    src/camera/p2procontrol.h \
     src/camera/snapshotcomposer.h \
     src/camera/thermalcamera.h \
     src/camera/videorecorder.h \
@@ -48,6 +49,7 @@ SOURCES += \
     src/app/capturestore.cpp \
     src/camera/cameraprofile.cpp \
     src/camera/palettes.cpp \
+    src/camera/p2procontrol.cpp \
     src/camera/snapshotcomposer.cpp \
     src/camera/thermalcamera.cpp \
     src/camera/videorecorder.cpp \

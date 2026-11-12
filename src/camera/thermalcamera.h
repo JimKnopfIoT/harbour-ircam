@@ -46,11 +46,23 @@ class ThermalCamera : public QObject
 
     // Calibration offset in °C, added to every reported temperature.
     Q_PROPERTY(double tempOffset READ tempOffset WRITE setTempOffset NOTIFY tempOffsetChanged)
+    // Emissivity of the target (0.1..1). Below 1 every temperature is corrected with
+    // Stefan-Boltzmann against the reflected temperature; 1 = the camera's reading as is.
+    Q_PROPERTY(double emissivity READ emissivity WRITE setEmissivity NOTIFY emissivityChanged)
+    // Reflected (surroundings) temperature in °C for the emissivity correction.
+    Q_PROPERTY(double reflectedTemp READ reflectedTemp WRITE setReflectedTemp NOTIFY emissivityChanged)
     // Unsharp-mask strength on the upscaled picture (0 = off).
     Q_PROPERTY(double sharpen READ sharpen WRITE setSharpen NOTIFY sharpenChanged)
     // Index into palettes::Id.
     Q_PROPERTY(int palette READ palette WRITE setPalette NOTIFY paletteChanged)
     Q_PROPERTY(QStringList paletteNames READ paletteNames CONSTANT)
+    // Measuring range (P2 Pro only): false = -20..150 °C (high gain, the camera's
+    // power-on default), true = 100..600 °C (low gain). Applied whenever the camera
+    // connects; highRangeActive is what the camera last confirmed.
+    Q_PROPERTY(bool highRange READ highRange WRITE setHighRange NOTIFY rangeChanged)
+    Q_PROPERTY(bool highRangeActive READ highRangeActive NOTIFY rangeChanged)
+    Q_PROPERTY(bool rangeSwitchable READ rangeSwitchable NOTIFY camerasChanged)
+    Q_PROPERTY(QString rangeError READ rangeError NOTIFY rangeChanged)   // empty = fine
 
     // Camera identification / database.
     Q_PROPERTY(QString cameraName READ cameraName NOTIFY camerasChanged)
@@ -86,11 +98,20 @@ public:
 
     double tempOffset() const { return m_tempOffset.load(); }
     void setTempOffset(double v);
+    double emissivity() const { return m_emissivity.load(); }
+    void setEmissivity(double v);
+    double reflectedTemp() const { return m_reflectedTemp.load(); }
+    void setReflectedTemp(double v);
     double sharpen() const { return m_sharpen.load(); }
     void setSharpen(double v);
     int palette() const { return m_palette.load(); }
     void setPalette(int id);
     QStringList paletteNames() const;
+    bool highRange() const { return m_highRange.load(); }
+    void setHighRange(bool on);
+    bool highRangeActive() const { return m_highRangeActive.load(); }
+    bool rangeSwitchable();
+    QString rangeError() const;
 
     QString cameraName();
     bool cameraKnown();
@@ -124,8 +145,10 @@ signals:
     void frameAvailable();
     void tempUpdated();
     void tempOffsetChanged();
+    void emissivityChanged();
     void sharpenChanged();
     void paletteChanged();
+    void rangeChanged();
     void camerasChanged();
 
 private:
@@ -141,6 +164,7 @@ private:
     bool streamFrom(const QString &dev);   // returns when the device is lost or stop()
     void setStatus(Status s, const QString &detail = QString(), const QString &dev = QString());
     void setStreaming(bool on);
+    bool applyRange(const QString &dev, bool quiet);   // worker thread; true = switched
 
     mutable QMutex m_mx;
     std::atomic<bool> m_run;
@@ -170,8 +194,14 @@ private:
     bool m_tempValid;
 
     std::atomic<double> m_tempOffset;
+    std::atomic<double> m_emissivity;
+    std::atomic<double> m_reflectedTemp;
     std::atomic<double> m_sharpen;
     std::atomic<int> m_palette;
+    std::atomic<bool> m_highRange;
+    std::atomic<bool> m_highRangeActive;
+    std::atomic<bool> m_rangeDirty;      // set by the GUI, picked up by the worker
+    QString m_rangeError;                // guarded by m_mx
 };
 
 #endif // THERMALCAMERA_H

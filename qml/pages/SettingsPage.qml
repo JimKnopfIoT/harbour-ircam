@@ -103,6 +103,22 @@ Page {
 
                 SectionHeader { text: qsTr("Measurement") }
 
+                ComboBox {
+                    label: qsTr("Measuring range")
+                    description: !app.camera.rangeSwitchable
+                                 ? qsTr("InfiRay P2 Pro only. Applied when the camera is connected.")
+                                 : app.camera.rangeError !== ""
+                                   ? app.camera.rangeError
+                                   : qsTr("The high range is coarser; use it for soldering "
+                                          + "irons, ovens and the like.")
+                    currentIndex: app.settings.highRange ? 1 : 0
+                    menu: ContextMenu {
+                        MenuItem { text: app.rangeName(false) }
+                        MenuItem { text: app.rangeName(true) }
+                    }
+                    onCurrentIndexChanged: app.settings.highRange = (currentIndex === 1)
+                }
+
                 TextSwitch {
                     text: qsTr("Fahrenheit")
                     description: qsTr("Show and save temperatures in °F instead of °C.")
@@ -131,6 +147,44 @@ Page {
                                + "temperature and adjust until the reading matches. "
                                + "Readings also depend on the emissivity of the "
                                + "surface — shiny metal reads far too low.")
+                }
+
+                Slider {
+                    width: parent.width
+                    label: qsTr("Emissivity")
+                    minimumValue: 0.1
+                    maximumValue: 1.0
+                    stepSize: 0.01
+                    value: app.settings.emissivity
+                    valueText: value >= 0.995 ? qsTr("off (1.00)") : value.toFixed(2)
+                    onValueChanged: app.settings.emissivity = value
+                }
+                Slider {
+                    width: parent.width
+                    visible: app.settings.emissivity < 0.995
+                    label: qsTr("Reflected temperature")
+                    minimumValue: -20
+                    maximumValue: 60
+                    stepSize: 1
+                    value: app.settings.reflectedTemp
+                    valueText: value.toFixed(0) + " °C"
+                    onValueChanged: app.settings.reflectedTemp = value
+                }
+                Label {
+                    x: Theme.horizontalPageMargin
+                    width: parent.width - 2 * Theme.horizontalPageMargin
+                    wrapMode: Text.Wrap
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    color: Theme.secondaryColor
+                    text: qsTr("How well the surface radiates. Below 1.00 every reading is "
+                               + "corrected, using the reflected temperature (usually room "
+                               + "temperature). Typical values: skin, matte paint, wood, "
+                               + "plastic, PCB 0.90–0.95; soldering tips, oxidised or plated "
+                               + "metal around 0.7 (a JBC tip read right at 0.73 from 220 to "
+                               + "450 °C); polished "
+                               + "aluminium or copper 0.03–0.10 — too low to measure reliably, "
+                               + "put a piece of matte tape on it instead. These are starting "
+                               + "points: fine-tune against something of known temperature.")
                 }
 
                 TextSwitch {

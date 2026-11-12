@@ -39,8 +39,8 @@ Tested on a Sony Xperia 10 III and a Jolla Phone (2026) with an InfiRay P2 Pro.
 ## What it does
 
 - **Live thermal view** in every orientation, with a choice of palettes
-  (Lava/Inferno, Ironbow, Rainbow, White-hot, Black-hot, and Grey with only the
-  hottest peaks in red). Pinch to zoom, drag to pan, double-tap to cycle zoom.
+  (Lava/Inferno, Ironbow, Rainbow, White-hot, Black-hot, Grey with only the
+  hottest peaks in red, Turbo, Magma, Plasma, Viridis and Hot). Pinch to zoom, drag to pan, double-tap to cycle zoom.
 - **Temperature measurement** decoded from the camera's own 16-bit data:
   the hottest and coldest spot, an optional centre spot, and up to six
   tap-to-place measurement points, each with its reading, plus a colour bar
@@ -50,8 +50,11 @@ Tested on a Sony Xperia 10 III and a Jolla Phone (2026) with an InfiRay P2 Pro.
   soft instead of blowing up into a hard white blob.
 - **Sharpening** in three steps — Off, Normal, Superfine — to bring out fine
   detail in the low-resolution sensor picture.
-- **Calibration offset** — nudge every reading up or down to match a known
-  reference, plus a Celsius/Fahrenheit switch throughout.
+- **Two measuring ranges** on the P2 Pro — −20 … 150 °C or 100 … 600 °C,
+  switched from the viewfinder (see below for the one-time setup).
+- **Emissivity and calibration offset** — correct readings for the surface
+  (grey body, against the reflected temperature) and nudge them to match a
+  known reference, plus a Celsius/Fahrenheit switch throughout.
 - **Overlays** you toggle from the viewfinder and that are burnt identically
   into both snapshots and videos: the min/max readout, the centre spot, the
   colour bar, a date-and-time stamp, and a location line with GPS coordinates in
@@ -110,12 +113,59 @@ Then unplug the camera and plug it in again. The file name must sort after
 affected; the phone's own camera nodes stay as they are. To undo, delete the
 file. An app from the store cannot install such a rule itself.
 
+## Measuring range (P2 Pro)
+
+The P2 Pro measures in two ranges: −20 … 150 °C (the default, finer) and
+100 … 600 °C (coarser, for soldering irons, ovens and the like). Switch with the
+"150°/600°" button in the viewfinder or under Settings → Measurement. The
+picture stands still for about three seconds while the camera recalibrates.
+
+<table>
+  <tr>
+    <td><img src="media/14.jpg" width="220"></td>
+    <td><img src="media/15.jpg" width="220"></td>
+  </tr>
+  <tr>
+    <td>Soldering iron set to 450 °C, 100 … 600 °C range: 450.7 °C</td>
+    <td>The same iron at 220 °C, −20 … 150 °C range: 218.6 °C</td>
+  </tr>
+</table>
+
+Both at emissivity 0.73, the value that fits this tip (see the note on
+accuracy below).
+
+The switch is not a video setting: the app sends a vendor command to the camera
+over the USB device node (`/dev/bus/usb/…`), which only root can write to by
+default — on any phone, not only the Jolla. If the app reports "No write
+access", add a second line to the rule file above, as root:
+
+```sh
+cat >> /etc/udev/rules.d/999-harbour-ircam.rules <<'EOR'
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0bda", ATTR{idProduct}=="5830", GROUP="video", MODE="0660"
+EOR
+udevadm control --reload-rules
+```
+
+Then unplug the camera and plug it in again. This line only affects the P2 Pro
+and works on its own, too, if your phone does not need the first one. The
+camera starts in the default range every time it is plugged in; the app sets
+the chosen range again when it connects.
+
+The command protocol comes from
+[P2Pro-Viewer](https://github.com/LeoDJ/P2Pro-Viewer) (LeoDJ, MIT) and
+[p2-viewer](https://github.com/lbatalha/p2-viewer) (lbatalha, MIT).
+
 ## A note on accuracy
 
-Temperatures are what the sensor reports, corrected only by an offset you can
-set. Readings depend on the emissivity of the surface: matte paint, skin, wood
-and most plastics read well; bare or shiny metal reflects its surroundings and
-reads far too low. Treat the readings as a guide, not a calibrated measurement.
+Temperatures are what the sensor reports, corrected by the offset and the
+emissivity you set. Readings depend on the emissivity of the surface: matte
+paint, skin, wood and most plastics read well at 0.90–0.95. Metal reflects its
+surroundings and reads too low unless the emissivity is lowered: soldering
+tips and oxidised or plated metal need around 0.7 — a JBC tip read right at
+0.73 from 220 to 450 °C. Polished aluminium or copper (0.03–0.10) cannot be
+measured reliably; put a piece of matte tape on it. These values are starting
+points: fine-tune against something of known temperature. Treat the readings
+as a guide, not a calibrated measurement.
 
 ## Building
 

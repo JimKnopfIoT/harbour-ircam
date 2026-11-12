@@ -32,7 +32,12 @@ ApplicationWindow {
         id: thermalCamera
         sharpen: settingsGroup.sharpen
         tempOffset: settingsGroup.tempOffset
+        emissivity: settingsGroup.emissivity
+        reflectedTemp: settingsGroup.reflectedTemp
         palette: settingsGroup.palette
+        highRange: settingsGroup.highRange
+        /* A failed switch falls back to the range the camera is really in. */
+        onRangeChanged: if (settingsGroup.highRange !== highRange) settingsGroup.highRange = highRange
     }
 
     CaptureStore {
@@ -119,6 +124,9 @@ ApplicationWindow {
         property int palette: 0              /* palettes::Lava */
         property real sharpen: 1.2
         property real tempOffset: 0.0
+        property real emissivity: 1.0         /* 1 = camera reading as is */
+        property real reflectedTemp: 20.0     /* °C, for the emissivity correction */
+        property bool highRange: false        /* P2 Pro: 100..600 °C instead of -20..150 °C */
         property bool fahrenheit: false
         property bool showMarkers: true       /* hottest / coldest + tap points */
         property bool showCenter: false       /* centre spot */
@@ -252,6 +260,11 @@ ApplicationWindow {
 
     function cyclePalette() {
         settingsGroup.palette = (settingsGroup.palette + 1) % thermalCamera.paletteNames.length
+    }
+
+    /* Measuring range of the P2 Pro, as shown on the viewfinder button. */
+    function rangeName(high) {
+        return high ? qsTr("100 … 600 °C") : qsTr("−20 … 150 °C")
     }
 
     // Sharpen presets cycled by the viewfinder button.

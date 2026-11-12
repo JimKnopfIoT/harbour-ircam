@@ -15,6 +15,11 @@ enum Id {
     WhiteHot,
     BlackHot,
     GreyRed,
+    Turbo,
+    Magma,
+    Plasma,
+    Viridis,
+    Hot,
     Count
 };
 

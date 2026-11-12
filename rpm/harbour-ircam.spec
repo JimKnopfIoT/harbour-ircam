@@ -1,7 +1,7 @@
 # Neutral packaging metadata — no personal identifiers.
 Name:       harbour-ircam
 Summary:    Thermal camera viewer for the InfiRay P2 Pro
-Version:    0.1.1
+Version:    0.2.0
 Release:    1
 # ANONYMITY: neutral build host so built RPMs carry no real hostname/domain.
 %define _buildhost reproducible-builder
@@ -54,6 +54,15 @@ telemetry.
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Thu Nov 12 2026 harbour-ircam contributors 0.2.0-1
+- Measuring range switch for the InfiRay P2 Pro: -20..150 °C or
+  100..600 °C, from a button in the viewfinder or in Settings. The camera
+  needs write access to its USB device node; the README has the udev line.
+- Emissivity and reflected temperature: readings are corrected for the
+  surface (grey body). Soldering tips and oxidised metal need about 0.7.
+- Five more palettes: Turbo, Magma, Plasma, Viridis, Hot.
+- The hint bubble in the viewfinder turns with the phone like the buttons.
+
 * Sun Aug 30 2026 harbour-ircam contributors 0.1.1-1
 - The controls keep clear of the camera cutout. On a phone with a notch
   the top row of buttons and the live status line were cut through by it,

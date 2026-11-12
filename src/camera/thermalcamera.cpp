@@ -1,11 +1,13 @@
 // thermalcamera.cpp — see thermalcamera.h. GPLv3+, © JimKnopfIoT.
 #include "thermalcamera.h"
 #include "palettes.h"
+#include "p2procontrol.h"
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QElapsedTimer>
@@ -120,8 +122,13 @@ ThermalCamera::ThermalCamera(QObject *parent)
     , m_tMinX(0), m_tMinY(0), m_tMaxX(0), m_tMaxY(0)
     , m_tempValid(false)
     , m_tempOffset(0.0)
+    , m_emissivity(1.0)
+    , m_reflectedTemp(20.0)
     , m_sharpen(1.2)
     , m_palette(palettes::Lava)
+    , m_highRange(false)
+    , m_highRangeActive(false)
+    , m_rangeDirty(false)
 {
     m_profiles = cameraprofiles::builtins();
     m_profiles += cameraprofiles::loadUserDb();
@@ -235,6 +242,26 @@ void ThermalCamera::setTempOffset(double v)
     emit tempUpdated();          // labels follow immediately
 }
 
+void ThermalCamera::setEmissivity(double v)
+{
+    if (v < 0.1) v = 0.1;
+    if (v > 1.0) v = 1.0;
+    if (qFuzzyCompare(m_emissivity.load(), v))
+        return;
+    m_emissivity.store(v);
+    emit emissivityChanged();
+}
+
+void ThermalCamera::setReflectedTemp(double v)
+{
+    if (v < -40) v = -40;
+    if (v > 100) v = 100;
+    if (qFuzzyCompare(m_reflectedTemp.load(), v))
+        return;
+    m_reflectedTemp.store(v);
+    emit emissivityChanged();
+}
+
 void ThermalCamera::setSharpen(double v)
 {
     if (v < 0) v = 0;
@@ -253,6 +280,73 @@ void ThermalCamera::setPalette(int id)
         return;
     m_palette.store(id);
     emit paletteChanged();
+}
+
+void ThermalCamera::setHighRange(bool on)
+{
+    if (m_highRange.load() == on)
+        return;
+    m_highRange.store(on);
+    m_rangeDirty.store(true);
+    emit rangeChanged();
+}
+
+bool ThermalCamera::rangeSwitchable()
+{
+    QMutexLocker l(&m_mx);
+    return m_detected.value(QStringLiteral("vidHex")).toString().toInt(0, 16) == p2pro::VID
+        && m_detected.value(QStringLiteral("pidHex")).toString().toInt(0, 16) == p2pro::PID;
+}
+
+QString ThermalCamera::rangeError() const
+{
+    QMutexLocker l(&m_mx);
+    return m_rangeError;
+}
+
+// Send the wanted gain to the P2 Pro behind `dev` and read it back. `quiet`: a
+// failure is not reported (restoring the default range on connect must not
+// complain on a phone where usbfs is not writable and nobody asked for 600 °C).
+bool ThermalCamera::applyRange(const QString &dev, bool quiet)
+{
+    const bool want = m_highRange.load();
+    const QString node = p2pro::usbNodeFor(QFileInfo(dev).fileName());
+    QString err;
+    bool ok = false, got = !want;
+    if (node.isEmpty()) {
+        err = tr("USB device of %1 not found.").arg(dev);
+    } else {
+        const int fd = p2pro::openUsb(node);
+        if (fd < 0) {
+            err = (errno == EACCES || errno == EPERM)
+                ? tr("No write access to %1. The camera needs a udev rule, see the README.").arg(node)
+                : tr("Cannot open %1: %2").arg(node, QString::fromLocal8Bit(strerror(errno)));
+        } else {
+            // High gain = the normal range, hence the negations.
+            bool high = want;
+            ok = p2pro::setHighGain(fd, !want, &err) && p2pro::getHighGain(fd, &high, &err);
+            ::close(fd);
+            got = !high;
+            if (!ok)
+                err = tr("Range switch failed: %1").arg(err);
+            else if (got != want) {
+                ok = false;
+                err = tr("The camera did not take the new range.");
+            }
+        }
+    }
+    qWarning() << "[ircam] range" << (want ? "100..600" : "-20..150") << node
+               << (ok ? "ok" : qPrintable(err));
+    if (ok)
+        m_highRangeActive.store(got);
+    else if (!quiet)
+        m_highRange.store(m_highRangeActive.load());   // show the range the camera is in, not the wish
+    {
+        QMutexLocker l(&m_mx);
+        m_rangeError = (ok || quiet) ? QString() : err;
+    }
+    emit rangeChanged();
+    return ok;
 }
 
 QString ThermalCamera::cameraName()
@@ -494,6 +588,13 @@ bool ThermalCamera::processFrame(const unsigned char *data, int w,
     const bool linear = (m_active.tempMode == QLatin1String("linear"));
     const int toff = m_active.tempRowOffset;
     const double sc = m_active.tempScale, oc = m_active.tempOffsetC;
+    // Emissivity correction (grey body, full band, no atmosphere — the same object
+    // equation IRCAM Thermal Viewer uses): T_obj^4 = (T^4 - (1-e) * T_refl^4) / e, in K.
+    const double eps = m_emissivity.load();
+    const bool emissCorr = eps < 0.999;
+    const double tRefl = m_reflectedTemp.load() + 273.15;
+    const double reflTerm = (1.0 - eps) * tRefl * tRefl * tRefl * tRefl;
+    const double invEps = 1.0 / eps;
 
     std::vector<unsigned char> &small = m_small;
     small.resize(size_t(iw) * ih);
@@ -509,7 +610,12 @@ bool ThermalCamera::processFrame(const unsigned char *data, int w,
             float *trow = temps.data() + size_t(y) * iw;
             for (int x = 0; x < iw; ++x) {
                 const int raw = row[x * 2] | (row[x * 2 + 1] << 8);
-                const double c = raw * sc + oc;
+                double c = raw * sc + oc;
+                if (emissCorr) {
+                    const double k = c + 273.15;
+                    const double w = (k * k * k * k - reflTerm) * invEps;
+                    c = (w > 0 ? std::sqrt(std::sqrt(w)) : 0.0) - 273.15;
+                }
                 trow[x] = float(c);
                 if (c < tmin) { tmin = c; mnX = x; mnY = y; }
                 if (c > tmax) { tmax = c; mxX = x; mxY = y; }
@@ -749,6 +855,14 @@ bool ThermalCamera::streamFrom(const QString &dev)
     }
     setStatus(Streaming, QString(), dev);
 
+    // The P2 Pro wakes up in the normal range; set the wanted one once frames flow.
+    // Restoring the normal range stays quiet (see applyRange).
+    int vid = -1, pid = -1;
+    readVidPid(QFileInfo(dev).fileName(), &vid, &pid);
+    const bool p2 = (vid == p2pro::VID && pid == p2pro::PID);
+    m_rangeDirty.store(true);
+    bool rangeQuiet = !m_highRange.load();
+
     std::vector<float> temps(size_t(m_active.imageW) * m_active.imageH);
     double emaLo = 0, emaHi = 0;
     bool emaInit = false;
@@ -795,6 +909,11 @@ bool ThermalCamera::streamFrom(const QString &dev)
 
         if (frames++ == 0)
             setStreaming(true);
+        if (p2 && m_rangeDirty.exchange(false)) {
+            if (applyRange(dev, rangeQuiet))
+                emaInit = false;           // new range: let the colour window re-settle
+            rangeQuiet = false;
+        }
         emit frameAvailable();
         if (tok)
             emit tempUpdated();
@@ -813,6 +932,8 @@ bool ThermalCamera::streamFrom(const QString &dev)
     for (unsigned i = 0; i < mapped; ++i)
         munmap(bufs[i].start, bufs[i].len);
     ::close(fd);
+    if (m_highRangeActive.exchange(false))
+        emit rangeChanged();               // a replugged camera starts in the normal range
     if (m_run.load())
         setStatus(Searching, tr("Camera disconnected."));
     return true;

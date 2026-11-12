@@ -99,7 +99,7 @@ Andere Kameras derselben Familie mit demselben Stream-Aufbau (z. B. Topdon TC001
     <message>
         <location filename="../qml/components/CameraDbView.qml" line="33"/>
         <source>Camera</source>
-        <translation type="unfinished">Kamera</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <location filename="../qml/components/CameraDbView.qml" line="34"/>
@@ -119,7 +119,7 @@ Andere Kameras derselben Familie mit demselben Stream-Aufbau (z. B. Topdon TC001
     <message>
         <location filename="../qml/components/CameraDbView.qml" line="43"/>
         <source>Picture</source>
-        <translation type="unfinished">Bild</translation>
+        <translation>Bild</translation>
     </message>
     <message>
         <location filename="../qml/components/CameraDbView.qml" line="48"/>
@@ -436,168 +436,203 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
         <translation>Messung</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="107"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="123"/>
         <source>Fahrenheit</source>
         <translation>Fahrenheit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="108"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="124"/>
         <source>Show and save temperatures in °F instead of °C.</source>
         <translation>Temperaturen in °F statt °C anzeigen und speichern.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="115"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="131"/>
         <source>Temperature offset</source>
         <translation>Temperatur-Offset</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="129"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="154"/>
+        <source>Emissivity</source>
+        <translation>Emissionsgrad</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="159"/>
+        <source>off (1.00)</source>
+        <translation>aus (1,00)</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="165"/>
+        <source>Reflected temperature</source>
+        <translation>Reflektierte Temperatur</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="145"/>
         <source>Added to every reading. The sensor is not calibrated in absolute terms; point it at something of known temperature and adjust until the reading matches. Readings also depend on the emissivity of the surface — shiny metal reads far too low.</source>
         <translation>Wird zu jedem Messwert addiert. Der Sensor ist absolut nicht kalibriert; richte ihn auf etwas mit bekannter Temperatur und stelle nach, bis der Wert passt. Die Werte hängen außerdem vom Emissionsgrad der Oberfläche ab — glänzendes Metall wird viel zu kalt angezeigt.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="137"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="107"/>
+        <source>Measuring range</source>
+        <translation>Messbereich</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="109"/>
+        <source>InfiRay P2 Pro only. Applied when the camera is connected.</source>
+        <translation>Nur InfiRay P2 Pro. Wird beim Verbinden der Kamera gesetzt.</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="112"/>
+        <source>The high range is coarser; use it for soldering irons, ovens and the like.</source>
+        <translation>Der hohe Bereich ist gröber; gedacht für Lötkolben, Öfen und Ähnliches.</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="179"/>
+        <source>How well the surface radiates. Below 1.00 every reading is corrected, using the reflected temperature (usually room temperature). Typical values: skin, matte paint, wood, plastic, PCB 0.90–0.95; soldering tips, oxidised or plated metal around 0.7 (a JBC tip read right at 0.73 from 220 to 450 °C); polished aluminium or copper 0.03–0.10 — too low to measure reliably, put a piece of matte tape on it instead. These are starting points: fine-tune against something of known temperature.</source>
+        <translation>Wie gut die Oberfläche abstrahlt. Unter 1,00 wird jeder Messwert korrigiert, mit der reflektierten Temperatur (meist Raumtemperatur). Typische Werte: Haut, matter Lack, Holz, Kunststoff, Platinen 0,90–0,95; Lötspitzen, oxidiertes oder beschichtetes Metall um 0,7 (eine JBC-Spitze zeigte mit 0,73 von 220 bis 450 °C richtig an); poliertes Aluminium oder Kupfer 0,03–0,10 – zu niedrig für verlässliche Messungen, besser ein Stück mattes Klebeband aufkleben. Das sind Startwerte: an etwas mit bekannter Temperatur feinabgleichen.</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SettingsPage.qml" line="191"/>
         <source>Hottest and coldest spot</source>
         <translation>Heißester und kältester Punkt</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="138"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="192"/>
         <source>Mark the extremes and allow tap-to-measure points on the picture.</source>
         <translation>Extreme markieren und Messpunkte per Tippen aufs Bild erlauben.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="144"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="198"/>
         <source>Centre spot</source>
         <translation>Mittelpunkt</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="145"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="199"/>
         <source>Crosshair in the middle with its temperature.</source>
         <translation>Fadenkreuz in der Mitte mit seiner Temperatur.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="150"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="204"/>
         <source>Colour bar</source>
         <translation>Farbskala</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="151"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="205"/>
         <source>Scale from coldest to hottest along the right edge.</source>
         <translation>Skala von kalt nach heiß am rechten Rand.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="156"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="210"/>
         <source>Min/max readout</source>
         <translation>Min/Max-Anzeige</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="157"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="211"/>
         <source>The hottest and coldest temperature at the top of the picture, on screen and in snapshots.</source>
         <translation>Die heißeste und kälteste Temperatur am oberen Bildrand, auf dem Schirm und in Schnappschüssen.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="164"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="218"/>
         <source>Location overlay</source>
         <translation>Standort-Einblendung</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="165"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="219"/>
         <source>Show GPS coordinates at the bottom of the picture and burn them into snapshots. Needs the location permission and a GPS fix.</source>
         <translation>GPS-Koordinaten am unteren Bildrand anzeigen und in Schnappschüsse einbrennen. Braucht die Standort-Berechtigung und einen GPS-Fix.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="170"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="224"/>
         <source>Off</source>
         <translation>Aus</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="171"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="225"/>
         <source>Decimal degrees</source>
         <translation>Dezimalgrad</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="172"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="226"/>
         <source>Nautical (deg + min)</source>
         <translation>Seemännisch (Grad + Min)</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="173"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="227"/>
         <source>Navigation (deg/min/sec)</source>
         <translation>Navigation (Grad/Min/Sek)</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="180"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="234"/>
         <source>Clear measurement points</source>
         <translation>Messpunkte löschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="187"/>
-        <location filename="../qml/pages/SettingsPage.qml" line="247"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="241"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="301"/>
         <source>Snapshots</source>
         <translation>Schnappschüsse</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="190"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="244"/>
         <source>Burn in date and time</source>
         <translation>Datum und Uhrzeit einbrennen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="191"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="245"/>
         <source>Shown in the corner of the picture and written into every snapshot.</source>
         <translation>Wird in der Bildecke angezeigt und in jeden Schnappschuss geschrieben.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="197"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="251"/>
         <source>Save temperature grid as CSV</source>
         <translation>Temperaturraster als CSV speichern</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="198"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="252"/>
         <source>Writes the raw temperature of every sensor pixel next to the picture, oriented like it, as comma-separated values.</source>
         <translation>Schreibt die Rohtemperatur jedes Sensorpixels neben das Bild, genauso ausgerichtet, als kommagetrennte Werte.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="205"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="259"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="210"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="264"/>
         <source>Video compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="218"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="272"/>
         <source>MB/min</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="228"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="282"/>
         <source>Videos are encoded as VP8/WebM with the overlay burnt in. Lower means smaller files and stronger compression; move right for more detail. Applies to the next recording. Switch to video mode with the button next to the gallery, then use the red record button.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="235"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="289"/>
         <source>Behaviour</source>
         <translation>Verhalten</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="238"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="292"/>
         <source>Keep the display on</source>
         <translation>Display anlassen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="239"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="293"/>
         <source>Prevents blanking while the camera is live.</source>
         <translation>Verhindert das Abdunkeln, solange die Kamera läuft.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="244"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="298"/>
         <source>Storage</source>
         <translation>Speicherort</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SettingsPage.qml" line="255"/>
+        <location filename="../qml/pages/SettingsPage.qml" line="309"/>
         <source>Open the gallery</source>
         <translation>Galerie öffnen</translation>
     </message>
@@ -618,62 +653,83 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
 <context>
     <name>ThermalCamera</name>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="163"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="170"/>
         <source>Camera off</source>
         <translation>Kamera aus</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="164"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="171"/>
         <source>Looking for camera…</source>
         <translation>Suche Kamera …</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="165"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="172"/>
         <source>Live</source>
         <translation>Live</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="166"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="173"/>
         <source>Camera error</source>
         <translation>Kamerafehler</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="328"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="317"/>
+        <source>USB device of %1 not found.</source>
+        <translation>USB-Gerät zu %1 nicht gefunden.</translation>
+    </message>
+    <message>
+        <location filename="../src/camera/thermalcamera.cpp" line="322"/>
+        <source>No write access to %1. The camera needs a udev rule, see the README.</source>
+        <translation>Kein Schreibzugriff auf %1. Die Kamera braucht eine udev-Regel, siehe README.</translation>
+    </message>
+    <message>
+        <location filename="../src/camera/thermalcamera.cpp" line="331"/>
+        <source>Range switch failed: %1</source>
+        <translation>Umschalten des Messbereichs fehlgeschlagen: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/camera/thermalcamera.cpp" line="334"/>
+        <source>The camera did not take the new range.</source>
+        <translation>Die Kamera hat den neuen Messbereich nicht übernommen.</translation>
+    </message>
+    <message>
+        <location filename="../src/camera/thermalcamera.cpp" line="422"/>
         <source>Plug the camera into the USB-C port.</source>
         <translation>Stecke die Kamera in den USB-C-Anschluss.</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="603"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="709"/>
         <source>Simulated camera</source>
         <translation>Simulierte Kamera</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="674"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="780"/>
         <source>No thermal camera found. Plug the P2 Pro into the USB-C port.</source>
         <translation>Keine Wärmebildkamera gefunden. Stecke die P2 Pro in den USB-C-Anschluss.</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="693"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="323"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="799"/>
         <source>Cannot open %1: %2</source>
         <translation>%1 kann nicht geöffnet werden: %2</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="707"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="813"/>
         <source>%1 does not deliver the expected %2×%3 stream.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="720"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="826"/>
         <source>Cannot allocate video buffers on %1.</source>
         <translation>Auf %1 können keine Videopuffer angelegt werden.</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="744"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="850"/>
         <source>Cannot start streaming from %1.</source>
         <translation>Streaming von %1 kann nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="../src/camera/thermalcamera.cpp" line="817"/>
+        <location filename="../src/camera/thermalcamera.cpp" line="938"/>
         <source>Camera disconnected.</source>
         <translation>Kamera getrennt.</translation>
     </message>
@@ -688,7 +744,7 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
     <message>
         <location filename="../src/camera/videorecorder.cpp" line="127"/>
         <source>No camera.</source>
-        <translation type="unfinished">Keine Kamera.</translation>
+        <translation>Keine Kamera.</translation>
     </message>
     <message>
         <location filename="../src/camera/videorecorder.cpp" line="150"/>
@@ -725,22 +781,22 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
 <context>
     <name>ViewfinderPage</name>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="401"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="420"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="401"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="420"/>
         <source>Photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="487"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="523"/>
         <source>Location</source>
         <translation>Standort</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ViewfinderPage.qml" line="324"/>
+        <location filename="../qml/pages/ViewfinderPage.qml" line="342"/>
         <source>Sharpness</source>
         <translation type="unfinished"></translation>
     </message>
@@ -748,33 +804,43 @@ Won&apos;t work: cameras that are not UVC (no /dev/video node) or that need a ve
 <context>
     <name>harbour-ircam</name>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="104"/>
+        <location filename="../qml/harbour-ircam.qml" line="109"/>
         <source>Decimal</source>
         <translation>Dezimal</translation>
     </message>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="105"/>
+        <location filename="../qml/harbour-ircam.qml" line="110"/>
         <source>Nautical</source>
         <translation>Seemännisch</translation>
     </message>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="106"/>
+        <location filename="../qml/harbour-ircam.qml" line="111"/>
         <source>Navigation</source>
         <translation>Navigation</translation>
     </message>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="107"/>
-        <location filename="../qml/harbour-ircam.qml" line="260"/>
+        <location filename="../qml/harbour-ircam.qml" line="112"/>
+        <location filename="../qml/harbour-ircam.qml" line="273"/>
         <source>Off</source>
         <translation>Aus</translation>
     </message>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="260"/>
+        <location filename="../qml/harbour-ircam.qml" line="267"/>
+        <source>100 … 600 °C</source>
+        <translation>100 … 600 °C</translation>
+    </message>
+    <message>
+        <location filename="../qml/harbour-ircam.qml" line="267"/>
+        <source>−20 … 150 °C</source>
+        <translation>−20 … 150 °C</translation>
+    </message>
+    <message>
+        <location filename="../qml/harbour-ircam.qml" line="273"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/harbour-ircam.qml" line="260"/>
+        <location filename="../qml/harbour-ircam.qml" line="273"/>
         <source>Superfine</source>
         <translation type="unfinished"></translation>
     </message>
